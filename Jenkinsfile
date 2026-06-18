@@ -12,7 +12,7 @@ pipeline {
 
         stage('Run Ansible') {
             steps {
-                sh 'ansible-playbook playbooks/pf-health.yml'
+                sh 'ansible-playbook /home/subhankar/pf-devops/playbooks/pf-health.yml'
             }
         }
 
