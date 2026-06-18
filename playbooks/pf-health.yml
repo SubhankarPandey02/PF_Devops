@@ -1,0 +1,15 @@
+---
+- hosts: pingfederate
+  become: yes
+
+  tasks:
+
+    - name: Check Admin Heartbeat
+      uri:
+        url: https://localhost:9999/pf/heartbeat.ping
+        validate_certs: false
+        return_content: yes
+      register: heartbeat
+
+    - debug:
+        var: heartbeat.content

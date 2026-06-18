@@ -1,0 +1,33 @@
+---
+- hosts: pingfederate
+  become: yes
+
+  tasks:
+
+    - name: Check Java version
+      command: java -version
+      register: java_output
+      changed_when: false
+
+    - name: Show Java output
+      debug:
+        var: java_output.stderr_lines
+
+    - name: Check PingFederate directory
+      stat:
+        path: /opt/ping/pingfederate
+      register: pf_dir
+
+    - name: Show PF directory status
+      debug:
+        var: pf_dir.stat.exists
+
+
+    - name: Check PF service
+      systemd:
+        name: pingfederate
+      register: pf_service
+
+    - name: Show service state
+      debug:
+        var: pf_service.status.ActiveState
