@@ -4,15 +4,13 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
+        stage('Debug') {
             steps {
-                echo 'Checking out source code'
-            }
-        }
-
-        stage('Run Ansible') {
-            steps {
-                sh 'ansible-playbook /home/subhankar/pf-devops/playbooks/pf-health.yml'
+                sh '''
+                pwd
+                ls -la
+                find . -type f
+                '''
             }
         }
 
