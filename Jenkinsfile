@@ -1,18 +1,15 @@
 pipeline {
-
     agent any
 
     stages {
-
-        stage('Debug') {
+        stage('PingFederate Health Check') {
             steps {
                 sh '''
                 pwd
-                ls -la
-                find . -type f
+                cat inventory/hosts
+                ansible-playbook -i inventory/hosts playbooks/pf-health.yml
                 '''
             }
         }
-
     }
 }

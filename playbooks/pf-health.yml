@@ -1,6 +1,6 @@
 ---
 - hosts: pingfederate
-  become: yes
+  gather_facts: false
 
   tasks:
 
