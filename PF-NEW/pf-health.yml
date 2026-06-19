@@ -1,0 +1,17 @@
+---
+- hosts: pingfederate
+
+  gather_facts: false
+
+  tasks:
+
+    - name: Check Heartbeat
+      uri:
+        url: https://localhost:10099/pf/heartbeat.ping
+        validate_certs: false
+        return_content: yes
+
+      register: heartbeat
+
+    - debug:
+        var: heartbeat.content

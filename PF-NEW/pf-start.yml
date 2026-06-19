@@ -1,0 +1,10 @@
+---
+- hosts: pingfederate
+  become: yes
+
+  tasks:
+
+    - name: Start PingFederate
+      systemd:
+        name: pingfederate-devops
+        state: started

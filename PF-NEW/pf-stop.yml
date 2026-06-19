@@ -1,0 +1,10 @@
+---
+- hosts: pingfederate
+  become: yes
+
+  tasks:
+
+    - name: Stop PingFederate
+      systemd:
+        name: pingfederate-devops
+        state: stopped

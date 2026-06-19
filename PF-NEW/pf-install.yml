@@ -1,0 +1,75 @@
+---
+- hosts: pingfederate
+  become: yes
+
+  vars:
+    pf_user: pingusr
+
+    pf_zip: /opt/install/pingfederate-12.3.6.zip
+
+    pf_install_root: /opt/install
+
+    pf_version_dir: /opt/install/pingfederate-12.3.6
+
+    pf_home: /opt/install/pingfederate-12.3.6/pingfederate
+
+    pf_license: /opt/install/PingFederate-12.3-Development.lic
+
+    java_home: /usr/lib/jvm/java-21-openjdk-amd64
+
+  tasks:
+
+    - name: Extract PingFederate
+      unarchive:
+        src: "{{ pf_zip }}"
+        dest: "{{ pf_install_root }}"
+        remote_src: yes
+
+    - name: Copy License
+      copy:
+        src: "{{ pf_license }}"
+        dest: "{{ pf_home }}/server/default/conf/pingfederate.lic"
+        remote_src: yes
+
+    - name: Set Ownership
+      file:
+        path: "{{ pf_version_dir }}"
+        owner: "{{ pf_user }}"
+        group: "{{ pf_user }}"
+        recurse: yes
+
+    - name: Set Permissions
+      file:
+        path: "{{ pf_version_dir }}"
+        mode: '0775'
+        recurse: yes
+
+    - name: Create service file
+      template:
+        src:  templates/pingfederate-devops.service.j2
+        dest: /etc/systemd/system/pingfederate-devops.service
+        owner: root
+        group: root
+        mode: '0664'
+
+    - name: Reload Systemd
+      systemd:
+        daemon_reload: yes
+
+    - name: Enable Service
+      systemd:
+        name: pingfederate-devops
+        enabled: yes
+
+    - name: Start Service
+      systemd:
+        name: pingfederate-devops
+        state: started
+
+    - name: Verify Service
+      command: systemctl is-active pingfederate-devops
+      register: service_status
+
+    - name: Display Service Status
+      debug:
+        var: service_status.stdout
